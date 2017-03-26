@@ -1,4 +1,4 @@
-add_library(apriltags
+add_library(apriltagslib
   CameraUtil.cpp
   DebugImage.cpp
   Geometry.cpp 
@@ -11,9 +11,13 @@ add_library(apriltags
   UnionFindSimple.cpp
 )
 
-set(AT_LIBS apriltags ${OPENCV_LDFLAGS})
+if (APPLE)
+   string(REPLACE "-llibtbb.dylib" "-ltbb" OPENCV_LDFLAGS "${OPENCV_LDFLAGS}")
+endif()
 
-target_link_libraries(apriltags ${AT_LIBS})
+target_link_libraries(apriltagslib ${OPENCV_LDFLAGS})
+
+set(AT_LIBS ${OPENCV_LDFLAGS} apriltagslib)
 
 add_executable(camtest camtest.cpp)
 target_link_libraries(camtest ${AT_LIBS})
